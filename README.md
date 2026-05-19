@@ -20,9 +20,14 @@ This skill fixes that.
 2. Pasting the MCP server config that WP MCP Ultimate generates for your site
 3. Entering your WordPress username and the Application Password it generated
 4. Claude auto-calculates the Base64 authorization (`username:APIkey` encoded) and asks you to confirm it before saving — so you can be sure the connection will work
-5. Writing a plain-text description of the business: who they are, what they do, who their audience is, what tone they use, their contact details, business hours, any legal notices, and anything else relevant. Claude uses this to generate the full editorial profile and the JSON-LD schema markup that powers SEO — so that data never has to be repeated in a prompt again.
+5. Writing a plain-text description of the business. Claude uses this to generate the full editorial profile and the JSON-LD schema markup that powers SEO — so that data never has to be repeated in a prompt again.
 
-**Every session:** run `/use-wpworkspace [name]`. Claude loads the entire client profile — contact data, editorial tone, writing rules, WP credentials, target URL — and applies it to everything for the rest of the session without being asked.
+**Every session:** run `/use-wpworkspace [name]`. Claude loads the entire client profile and:
+1. **Automatically updates your local `.mcp.json`** to configure the `"wp-mcp-ultimate"` server with the active credentials and URL.
+2. **Automatically runs a live connection check** by querying the WordPress `discover-abilities` endpoint to verify credentials.
+3. Loads all client, editorial, and connection context into the session.
+
+All of this happens instantly without requiring a restart of Claude Code (as the CLI hot-reloads the local `.mcp.json` automatically).
 
 ```
 /use-wpworkspace corner-brew
@@ -46,17 +51,18 @@ This skill fixes that.
    Avoid:    Corporate buzzwords, urgency language, hard sells
    CTA:      Inviting, low-pressure — "come by", "we'd love to see you"
 
-🔧 WP MCP: wp-mcp-ultimate → https://corner-brew.com
+🔧 WP MCP: wp-mcp-ultimate (updated in local .mcp.json) → https://corner-brew.com
+🔌 Connection: 🟢 Connection verified: OK (found 35 abilities)
 ```
 
 From this point on in the session, Claude already knows:
 - Who to write for and how to sound doing it
 - What contact info and legal notices go in CTAs and footers
-- Which WordPress site to publish to
+- Which WordPress site to publish to (fully connected)
 - What the SEO target domain is
 - What to never write
 
-No more repeating any of it.
+No more repeating any of it, and no manual file switching.
 
 ---
 
@@ -160,7 +166,16 @@ Confirm this is the right account before continuing.
 You confirm before anything is saved.
 
 **Step 6 — Describe the client**
-Write a plain-text description — as detailed as you like. Include what the business does, who their customers are, the tone and voice they use, their contact details, business hours, service areas, certifications, legal notices, and anything else that should appear consistently in content, CTAs, and structured data. Claude uses this to generate the full editorial profile and JSON-LD schema automatically. The more you include here, the less you'll ever need to explain in a prompt.
+Write a plain-text description — as detailed as you like. Include what the business does, who their customers are, the tone and voice they use, their contact details, business hours, service areas, certifications, legal notices, and anything else that should appear consistently in content, CTAs, and structured data. Claude uses this to generate the full editorial profile and JSON-LD schema automatically.
+
+**Step 7 — Generate and confirm workspace**
+Claude generates the industry classification, business description, tone, voice, audience, avoided topics, and custom CTA style based on your plain-text description. You review the formatted summary and confirm to save.
+
+**Step 8 — Automatic server registration**
+Claude automatically updates (or creates) the local `.mcp.json` file in the current working directory, writing the credentials under the standardized `"wp-mcp-ultimate"` key, and removing any obsolete WordPress server keys to prevent tool collisions.
+
+**Step 9 — Activation & Verification**
+You activate the workspace using `/use-wpworkspace [id]`. Claude will instantly connect to the site, verify the connection with a live check, and load all writing guidelines into the session.
 
 ---
 
@@ -172,7 +187,7 @@ Write a plain-text description — as detailed as you like. Include what the bus
 /use-wpworkspace my-client
 ```
 
-Claude loads all context. Blog writing, SEO analysis, and WordPress publishing will automatically use the correct credentials, tone, contact data, and content rules for that client — without repeating them in every prompt.
+Claude loads all context and automatically updates `.mcp.json`. Blog writing, SEO analysis, and WordPress publishing will automatically use the correct credentials, tone, contact data, and content rules for that client — without repeating them in every prompt. No restart is needed.
 
 ### List available workspaces
 
@@ -186,14 +201,18 @@ Claude loads all context. Blog writing, SEO analysis, and WordPress publishing w
 /add-wpworkspace
 ```
 
-Fill in the form, paste your WP connection block, write a description of the client, and Claude builds the workspace. Confirm and it's saved.
+Fill in the form, paste your WP connection block, write a description of the client, and Claude builds the workspace, updates the local `.mcp.json`, and registers it.
 
 ### Switch between clients in the same session
+
+You can switch workspaces instantly at any time in your session:
 
 ```
 /use-wpworkspace client-a
 /use-wpworkspace client-b
 ```
+
+No restarts required. The active credentials and URLs are swapped dynamically in `.mcp.json` and hot-reloaded by the Claude CLI.
 
 ---
 
