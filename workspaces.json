@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.2",
+  "workspaces": {
+    "example-coffee-shop": {
+      "site_url": "https://example-coffee.com",
+      "wp": {
+        "mcp_endpoint": "https://example-coffee.com/wp-json/mcp/wp-mcp-ultimate",
+        "auth_header": "Basic BASE64_ENCODED_CREDENTIALS",
+        "mcp_server": "wp-mcp-ultimate"
+      },
+      "client": {
+        "business_name": "The Corner Brew",
+        "contact_name": "Sara Mitchell",
+        "industry": "Café / Food & Beverage",
+        "description": "Independent specialty coffee shop focused on single-origin beans and a calm workspace atmosphere",
+        "phones": ["+1 555 000 0001"],
+        "whatsapp": "",
+        "email": "hello@example-coffee.com",
+        "address": "14 Oak Street, Portland, OR 97201",
+        "site_web": "https://example-coffee.com",
+        "legal": []
+      },
+      "editorial": {
+        "tone": "Warm, unhurried, sensory — like a good cup of coffee",
+        "voice": "First person plural (we/our) — the shop speaking",
+        "language": "en-US",
+        "audience": "Remote workers, coffee enthusiasts, locals looking for a calm spot",
+        "avoid": ["corporate buzzwords", "urgency language", "hard sells"],
+        "cta_style": "Inviting, low-pressure — 'come by', 'we'd love to see you'",
+        "notes": "Always mention the neighborhood feel and community aspect"
+      }
+    },
+    "example-law-firm": {
+      "site_url": "https://example-legal.com",
+      "wp": {
+        "mcp_endpoint": "https://example-legal.com/wp-json/mcp/wp-mcp-ultimate",
+        "auth_header": "Basic BASE64_ENCODED_CREDENTIALS",
+        "mcp_server": "wp-mcp-ultimate"
+      },
+      "client": {
+        "business_name": "Harmon & Associates",
+        "contact_name": "James Harmon",
+        "industry": "Legal / Law Firm",
+        "description": "Boutique employment law firm specializing in wrongful termination and workplace discrimination cases",
+        "phones": ["+44 20 0000 0001"],
+        "whatsapp": "",
+        "email": "contact@example-legal.com",
+        "address": "22 Bishopsgate, London EC2N 4BQ",
+        "site_web": "https://example-legal.com",
+        "legal": ["Regulated by the Solicitors Regulation Authority"]
+      },
+      "editorial": {
+        "tone": "Authoritative but human — serious without being intimidating",
+        "voice": "Third person (the firm) for institutional content, first person for thought leadership",
+        "language": "en-GB",
+        "audience": "Employees who believe their rights have been violated",
+        "avoid": ["excessive legal jargon without explanation", "fear-based language", "overpromising outcomes"],
+        "cta_style": "Empathetic and clear — 'speak with our team', 'free initial consultation'",
+        "notes": "Always include a disclaimer that content is informational, not legal advice"
+      }
+    }
+  }
+}
