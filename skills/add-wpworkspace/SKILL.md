@@ -22,7 +22,7 @@ Use a short slug — lowercase, no spaces (e.g. corner-brew, harmon-legal, janes
 This is the name you'll type in /use-wpworkspace to activate it.
 ```
 
-Validate: must be lowercase, no spaces or special characters. If the name already exists in workspaces.json, warn and ask for a different one.
+Validate: must be lowercase, no spaces or special characters. If the name already exists in workspaces.json, warn and ask for a different one. The MCP server name is standardized as `wp-mcp-ultimate` to avoid tool name collisions and enable instant workspace switching.
 
 ---
 
@@ -146,7 +146,34 @@ On confirmation: read `~/.config/wp-workspaces/workspaces.json`, append the entr
 
 ---
 
-### Step 8 — Confirm and activate
+### Step 8 — Register MCP server in .mcp.json
+
+After saving the workspace to `workspaces.json`, immediately update `.mcp.json`:
+
+1. Find `.mcp.json` in the current working directory. If it doesn't exist, create it.
+2. Read the current contents and parse the JSON.
+3. Add (or overwrite) the entry for `wp-mcp-ultimate`:
+
+```json
+"wp-mcp-ultimate": {
+  "type": "streamable-http",
+  "url": "[wp.mcp_endpoint]",
+  "headers": {
+    "Authorization": "[wp.auth_header]"
+  }
+}
+```
+
+4. Write the updated `.mcp.json` back, preserving other non-WordPress entries, and removing any previous WordPress MCP servers (e.g. keys matching `wp-` like `wp-prostaclinic` or `wp-cirujanoencdmx`) to prevent tool collisions.
+5. Show confirmation:
+
+```
+🔧 MCP server "wp-mcp-ultimate" registered/updated in .mcp.json.
+```
+
+---
+
+### Step 9 — Confirm and activate
 
 ```
 ✅ Workspace "[id]" saved.

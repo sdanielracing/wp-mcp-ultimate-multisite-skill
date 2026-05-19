@@ -127,6 +127,20 @@ Do you also want to update the business description and editorial profile?
 
 If yes, show current profile and follow Path A's update flow.
 
+### Step B6 — Update .mcp.json
+
+After saving the updated workspace to `workspaces.json`, update `.mcp.json`:
+
+1. Read `.mcp.json` from the current working directory.
+2. Find (or create) the entry for `wp-mcp-ultimate`.
+3. Update its `url` and `Authorization` header with the new values.
+4. Write back, preserving other non-WordPress entries, and removing any previous WordPress MCP servers (e.g. keys matching `wp-` like `wp-prostaclinic` or `wp-cirujanoencdmx`) to prevent tool collisions.
+5. Show:
+
+```
+🔧 MCP server "wp-mcp-ultimate" updated in .mcp.json.
+```
+
 ---
 
 ## Step 3 — Write and confirm
@@ -144,5 +158,7 @@ Activate now? → /use-wpworkspace [id]
 ## Notes
 
 - Only fields that changed are updated — everything else is preserved
+- Path A never touches `.mcp.json`
+- Path B updates `.mcp.json` to keep credentials synchronized
 - If the site URL changed (e.g. domain migration), treat it as a full reset (Path B)
 - To add a brand new workspace: `/add-wpworkspace`

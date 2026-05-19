@@ -20,7 +20,24 @@ Activates a client workspace and loads all context for the session: client profi
 ### With workspace name
 1. Read `~/.config/wp-workspaces/workspaces.json`
 2. Find the workspace — if not found, list available and ask to choose
-3. Load full context and return the confirmation below
+3. Automatically update or create the local `.mcp.json` file in the current working directory.
+   - Set/overwrite the `"wp-mcp-ultimate"` key under `"mcpServers"` with the workspace's connection endpoint and authorization headers:
+     ```json
+     "wp-mcp-ultimate": {
+       "type": "streamable-http",
+       "url": "[wp.mcp_endpoint]",
+       "headers": {
+         "Authorization": "[wp.auth_header]"
+       }
+     }
+     ```
+   - Preserve any other non-WordPress MCP servers configured in `.mcp.json`.
+   - Remove any previous/colliding WordPress MCP servers from the `"mcpServers"` dictionary (e.g. keys matching `"wp-cirujanoencdmx"`, `"wp-prostaclinic"`, or other site names) to avoid tool collisions.
+4. **Verify MCP Connection**:
+   - Immediately execute the `wp-mcp-ultimate/discover-abilities` tool (using the newly updated credentials and URL).
+   - If the connection succeeds, count the registered WordPress abilities found and display a success status (`🟢 Connection verified: OK (found X abilities)`).
+   - If the connection fails (e.g., authorization error, network issue, or invalid URL), display a warning status (`🔴 Connection verification failed: [brief description of error]`) and warn the user to check their workspace credentials.
+5. Load full context and return the confirmation below.
 
 ## Output on activation
 
@@ -44,7 +61,8 @@ Activates a client workspace and loads all context for the session: client profi
 [if editorial.avoid] ⚠️  Avoid: [editorial.avoid joined by ", "]
 [if editorial.notes] 📌 [editorial.notes]
 
-🔧 WP MCP: [wp.mcp_server] → [site_url]
+🔧 WP MCP: wp-mcp-ultimate (updated in local .mcp.json) → [site_url]
+🔌 Connection: [Verification Status Message]
 ```
 
 After this, Claude holds all context for the session. No need to repeat client details in subsequent prompts.
@@ -54,27 +72,10 @@ After this, Claude holds all context for the session. No need to repeat client d
 Once active, this workspace context automatically informs:
 
 - **Content / blog writing** — tone, voice, language, audience, CTAs, and legal notices from `editorial`
-- **WP publishing** — credentials and endpoint from `wp`
+- **WP publishing** — credentials and endpoint from `wp` (routed through the `wp-mcp-ultimate` MCP server)
 - **SEO** — target domain from `site_url`, language from `editorial.language`
 - **CTAs and footers** — business name, contact, and legal from `client`
 - **Anything in `editorial.notes`** — apply to all content without being asked
-
-## If the site is not in .mcp.json yet
-
-Show this snippet at the end of activation when the workspace uses a site not already configured:
-
-```
-⚠️  This site is not in your current .mcp.json.
-    Add this entry and restart Claude Code:
-
-    "[id]": {
-      "type": "streamable-http",
-      "url": "[wp.mcp_endpoint]",
-      "headers": {
-        "Authorization": "[wp.auth_header]"
-      }
-    }
-```
 
 ## Notes
 
@@ -82,3 +83,4 @@ Show this snippet at the end of activation when the workspace uses a site not al
 - To add a new client: `/add-wpworkspace`
 - To generate an auth header: `echo -n "user:app_password" | base64`
 - Active workspace persists for the session until another `/use-wpworkspace` is called
+
